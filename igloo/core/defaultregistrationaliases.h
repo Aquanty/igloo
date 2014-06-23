@@ -11,19 +11,19 @@
 
 // Default aliases
 #define Context(contextName) \
-IGLOO_CONTEXT_REGISTRATION(contextName)
+IGLOO_CONTEXT_REGISTRATION(TO_CONTEXT(contextName))
 
 #define Context_Only(contextName) \
-IGLOO_CONTEXT_REGISTRATION_ONLY(contextName)
+IGLOO_CONTEXT_REGISTRATION_ONLY(TO_CONTEXT(contextName))
 
 #define Context_Skip(contextName) \
-IGLOO_CONTEXT_REGISTRATION_SKIP(contextName)
+IGLOO_CONTEXT_REGISTRATION_SKIP(TO_CONTEXT(contextName))
 
 #define ParentContext(contextName) \
-  IGLOO_PARENT_CONTEXT_REGISTRATION(contextName)
+  IGLOO_PARENT_CONTEXT_REGISTRATION(TO_CONTEXT(contextName))
 
 #define SubContext(contextName, baseContextName) \
-IGLOO_SUBCONTEXT_REGISTRATION(contextName, baseContextName)
+IGLOO_SUBCONTEXT_REGISTRATION(TO_CONTEXT(contextName), TO_CONTEXT(baseContextName))
 
 #define Spec(specName) \
 IGLOO_SPEC_REGISTRATION(specName)  
@@ -42,10 +42,10 @@ IGLOO_CONTEXT_ATTRIBUTE_REGISTRATION(attributeName, attributeValue)
 IGLOO_CONTEXT_REGISTRATION(fixtureName)
 
 #define TestFixture_Only(contextName) \
-IGLOO_CONTEXT_REGISTRATION_ONLY(contextName)
+IGLOO_CONTEXT_REGISTRATION_ONLY(TO_CONTEXT(contextName))
 
 #define TestFixture_Skip(contextName) \
-IGLOO_CONTEXT_REGISTRATION_SKIP(contextName)
+IGLOO_CONTEXT_REGISTRATION_SKIP(TO_CONTEXT(contextName))
 
 #define DerivedFixture(fixtureName, baseFixtureName) \
 IGLOO_SUBCONTEXT_REGISTRATION(fixtureName, baseFixtureName)

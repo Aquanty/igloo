@@ -7,6 +7,8 @@
 #ifndef IGLOO_CONTEXTRUNNER_H
 #define IGLOO_CONTEXTRUNNER_H
 
+#include <regex>
+
 namespace igloo {
 
   
@@ -15,9 +17,9 @@ namespace igloo {
     BaseContextRunner(const std::string& contextName, const char* fileName, int lineNumber) 
       : contextName_(contextName), fileName_(fileName), lineNumber_(lineNumber) {}
     virtual ~BaseContextRunner() {}
-    void Run(TestResults& results, TestListener& testListener) const
+    void Run(TestResults& results, TestListener& testListener, const std::regex& filter) const
     {
-      RunContext(results, testListener);
+      RunContext(results, testListener, filter);
     }
 
     virtual bool IsContextMarkedAsOnly() const = 0;
@@ -40,7 +42,7 @@ namespace igloo {
     }
 
     protected:
-    virtual void RunContext(TestResults& results, TestListener& testListener) const = 0;
+    virtual void RunContext(TestResults& results, TestListener& testListener, const std::regex& filter) const = 0;
 
     private:
       std::string contextName_;
@@ -87,10 +89,10 @@ namespace igloo {
       return ContextType::IsMarkedAsSkip();
     }
 
-    void RunContext(TestResults& results, TestListener& testListener) const
+    void RunContext(TestResults& results, TestListener& testListener, const std::regex& filter) const
     {
       typedef ContextRegistry<CTE> CR;
-      CR::template Run<CTC>(ContextName(), results, testListener);
+      CR::template Run<CTC>(ContextName(), results, testListener, filter);
     }
   };
 }

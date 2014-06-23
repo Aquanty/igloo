@@ -7,6 +7,9 @@
 #ifndef IGLOO_CONTEXTREGISTRY_H
 #define IGLOO_CONTEXTREGISTRY_H
 
+#include <regex>
+#include <iostream>
+
 namespace igloo {
 
   //
@@ -65,12 +68,18 @@ namespace igloo {
     }
 
     template <typename ContextToCreate>
-      static void Run(const std::string& contextName, TestResults& results,
-          TestListener& testListener)
+      static void Run(const std::string& contextName, TestResults& results, TestListener& testListener, const std::regex& filter)
       {    
         Specs specs;
         GetSpecsToRun(specs);
-        CallSpecs<ContextToCreate>(specs, contextName, results, testListener);
+		Specs filtered = Specs();
+	    for (auto spec : specs)
+	    {
+	    	auto name = contextName + "." + spec.first;
+	    	if (std::regex_match(name, filter))
+	      	filtered.insert(spec);
+	    }
+        CallSpecs<ContextToCreate>(filtered, contextName, results, testListener);
       }
 
 

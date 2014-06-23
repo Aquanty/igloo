@@ -11,6 +11,8 @@
 #include <igloo/core/testresults.h>
 #include <igloo/core/testlisteners/minimalprogresstestlistener.h>
 #include <igloo/external/choices/choices.h>
+#include <regex>
+#include <iostream>
 
 namespace igloo {
 
@@ -33,18 +35,21 @@ namespace igloo {
 
         if(c::has_option("help", opt))
         {
-          std::cout << "Usage: <igloo-executable> [--version] [--output=color|vs|xunit]" << std::endl;
+          std::cout << "Usage: <igloo-executable> [--version] [--output=color|vs|xunit|gtest] [--filter=<regular expression>]" << std::endl;
           std::cout << "Options:" << std::endl;
+          std::cout << "  --filter:\tRun only tests with context matching the expression."<< std::endl;
           std::cout << "  --version:\tPrint version of igloo and exit." << std::endl;
           std::cout << "  --output:\tFormat output of test results." << std::endl;
           std::cout << "\t\t--output=color:\tColored output" << std::endl;
           std::cout << "\t\t--output=vs:\tVisual studio friendly output." << std::endl;
           std::cout << "\t\t--output=xunit:\tXUnit formatted output." << std::endl;
+          std::cout << "\t\t--output=gtest:\tGTest style output." << std::endl;
           std::cout << "\t\t--output=default:\tDefault output format." << std::endl;
           return 0;
         }
 
         std::auto_ptr<TestResultsOutput> output;
+        TestListener* listener = nullptr;
         if(c::has_option("output", opt))
         {
           std::string val = c::option_value("output", opt);
@@ -64,6 +69,12 @@ namespace igloo {
           {
             output = std::auto_ptr<TestResultsOutput>(new DefaultTestResultsOutput());
           }
+          else if(val == "gtest")
+          {
+            auto outputter = new GTestResultsOutput();
+            listener = outputter;
+            output = std::auto_ptr<TestResultsOutput>(outputter);
+          }
           else
           {
             std::cerr << "Unknown output: " << c::option_value("output", opt) << std::endl;
@@ -75,13 +86,24 @@ namespace igloo {
           output = std::auto_ptr<TestResultsOutput>(new DefaultTestResultsOutput());
         }
 
-
         TestRunner runner(*(output.get()));
 
         MinimalProgressTestListener progressOutput;
-        runner.AddListener(&progressOutput);
+        if (listener != nullptr)
+        {
+          runner.AddListener(listener);
+        }
+        else
+        {
+          runner.AddListener(&progressOutput);
+        }
 
-        return runner.Run();
+        std::regex filter(".*");
+        if (c::has_option("filter", opt))
+        {
+          filter = (c::option_value("filter", opt));
+        }
+        return runner.Run(filter);
       }
 
 
@@ -94,7 +116,7 @@ namespace igloo {
         return runner->IsContextMarkedAsOnly();
       }
 
-      int Run(const ContextRunners& runners)
+      int Run(const ContextRunners& runners, const std::regex& filter)
       {
         TestResults results;
 
@@ -107,7 +129,7 @@ namespace igloo {
           BaseContextRunner* contextRunner = *it;
           if(!only_has_been_found || contextRunner->IsContextMarkedAsOnly()) {
             if(!contextRunner->IsMarkedAsSkip()) {
-              contextRunner->Run(results, listenerAggregator_);
+          		contextRunner->Run(results, listenerAggregator_, filter);
             }
           }
         }
@@ -118,9 +140,9 @@ namespace igloo {
         return results.NumberOfFailedTests();
       }
 
-      int Run()
+      int Run(std::regex filter = std::regex(".*"))
       {
-        int numberOfFailedTests = Run(RegisteredRunners());
+        int numberOfFailedTests = Run(RegisteredRunners(), filter);
         CleanUpRunners();
         return numberOfFailedTests;
       }
@@ -129,14 +151,15 @@ namespace igloo {
       template <typename ContextRunnerType>
         static void RegisterContext(const std::string& name, const char* fileName, int lineNumber)
         {
-          if(!ContextIsRegistered(name, fileName, lineNumber))
+          auto visibleName = name.substr(0, name.length() - IglooContextSuffix.length());
+          if(!ContextIsRegistered(visibleName, fileName, lineNumber))
           {
             ContextRunnerType* contextRunner = 0;
 
             try
             {
               // Must add runner first...
-              contextRunner = new ContextRunnerType(name, fileName, lineNumber);
+              contextRunner = new ContextRunnerType(visibleName, fileName, lineNumber);
               TestRunner::RegisteredRunners().push_back(contextRunner);
 
               // ... and then instantiate context, because context ctor calls this method again,
