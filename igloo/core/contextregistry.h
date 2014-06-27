@@ -8,6 +8,7 @@
 #define IGLOO_CONTEXTREGISTRY_H
 
 #include <regex>
+#include <iostream>
 
 namespace igloo {
 
@@ -71,14 +72,13 @@ namespace igloo {
       {    
         Specs specs;
         GetSpecsToRun(specs);
-  		  Specs filtered = Specs();
-        // TODO move to GetSpecsToRun
-  	    for (auto spec : specs)
-  	    {
-  	    	auto name = contextName + "." + spec.first;
-  	    	if (std::regex_match(name, filter))
-  	      	filtered.insert(spec);
-  	    }
+		Specs filtered = Specs();
+	    for (auto spec : specs)
+	    {
+	    	auto name = contextName + "." + spec.first;
+	    	if (std::regex_match(name, filter))
+	      	filtered.insert(spec);
+	    }
         CallSpecs<ContextToCreate>(filtered, contextName, results, testListener);
       }
 
