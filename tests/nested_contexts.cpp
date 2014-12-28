@@ -9,7 +9,9 @@ using namespace igloo;
 
 Context(AFreshContext)
 {
-  AFreshContext() : member("unaltered")
+  std::string member;
+
+  TO_CONTEXT(AFreshContext) () : member("unaltered")
   {
   }
 
@@ -25,7 +27,6 @@ Context(AFreshContext)
     member = "altered";
   }
 
-  std::string member;
 };
 
 Context(AContextWithSetupAndTearDown)

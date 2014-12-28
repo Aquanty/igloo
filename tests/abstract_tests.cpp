@@ -10,7 +10,7 @@ using namespace igloo;
 
 ParentContext(Common)
 {
-  virtual ~Common() {}
+  virtual ~TO_CONTEXT(Common)() {}
   virtual void SetUp() = 0;
   
   Spec(TestIt)
@@ -23,7 +23,7 @@ ParentContext(Common)
 
 SubContext(Specific1, Common)
 {
-  virtual ~Specific1() {}
+  virtual ~TO_CONTEXT(Specific1)() {}
   
   void SetUp()
   {
@@ -33,7 +33,7 @@ SubContext(Specific1, Common)
 
 SubContext(Specific2, Common)
 {
-  virtual ~Specific2() {}
+  virtual ~TO_CONTEXT(Specific2)() {}
   
   void SetUp()
   {

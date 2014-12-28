@@ -12,7 +12,7 @@ using namespace igloo;
 
 Context(TestRunner_)
 {
-  TestRunner_() :
+  TO_CONTEXT(TestRunner_)() :
     contextRunner("without_only", "file1", 12),
     contextRunner_Only("with_only", "file2", 13),
     contextRunner_Skip("with_skip", "file3", 14)
@@ -22,7 +22,7 @@ Context(TestRunner_)
   {
     contextRunner_Only.MarkAsOnly();
     contextRunner_Skip.MarkAsSkip();
-    runner = std::auto_ptr<TestRunner>(new TestRunner(nullOutput));
+    runner = std::shared_ptr<TestRunner>(new TestRunner(nullOutput));
   }
 
   Context(no_only_specified)
@@ -78,7 +78,7 @@ Context(TestRunner_)
   fakes::FakeContextRunner contextRunner;
   fakes::FakeContextRunner contextRunner_Only;
   fakes::FakeContextRunner contextRunner_Skip;
-  std::auto_ptr<TestRunner> runner;
+  std::shared_ptr<TestRunner> runner;
   fakes::NullTestResultsOutput nullOutput;
   TestRunner::ContextRunners contextRunners;
 };

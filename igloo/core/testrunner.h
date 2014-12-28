@@ -116,7 +116,7 @@ namespace igloo {
         return runner->IsContextMarkedAsOnly();
       }
 
-      int Run(const ContextRunners& runners, const std::regex& filter)
+      int Run(const ContextRunners& runners, const std::regex& filter = std::regex(".*"))
       {
         TestResults results;
 

@@ -13,7 +13,7 @@ Context(An_assertion_without_file_and_linenumber_information)
   AssertionException exception;
   TestResultFactory factory;
 
-  An_assertion_without_file_and_linenumber_information() 
+  TO_CONTEXT(An_assertion_without_file_and_linenumber_information)() 
     : exception("An error message")
       ,factory("A context name", "A spec name") 
   {}
@@ -41,7 +41,7 @@ Context(An_assertion_with_file_and_linenumber_information)
   AssertionException exception;
   TestResultFactory factory;
 
-  An_assertion_with_file_and_linenumber_information()
+  TO_CONTEXT(An_assertion_with_file_and_linenumber_information)()
     : exception("An error message", "myfile.cpp", 432)
       ,factory("A context name", "A spec")
   {}

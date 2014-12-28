@@ -14,16 +14,16 @@ using namespace igloo;
 Context(registering_a_test_listener)
 {
   fakes::NullTestResultsOutput nullOutput;
-  std::auto_ptr<TestRunner> runner;
+  std::shared_ptr<TestRunner> runner;
   TestRunner::ContextRunners contextRunners;
   fakes::FakeTestListener listener;
   fakes::FakeContextRunner contextRunner;
   
-  registering_a_test_listener() : contextRunner("contextName", "file1", 44) {}
+  TO_CONTEXT(registering_a_test_listener)() : contextRunner("contextName", "file1", 44) {}
 
   void SetUp()
   {
-    runner = std::auto_ptr<TestRunner>(new TestRunner(nullOutput));
+    runner = std::shared_ptr<TestRunner>(new TestRunner(nullOutput));
     runner->AddListener(&listener);
 
     contextRunners.push_back(&contextRunner);

@@ -12,7 +12,7 @@ Describe(An_entity)
 {
   bool its_true; 
 
-  An_entity() : its_true(true) {}
+  TO_CONTEXT(An_entity)() : its_true(true) {}
 
   It(should_do_something)
   {
@@ -21,7 +21,7 @@ Describe(An_entity)
 
   Describe(A_more_detailed_description)
   {
-    A_more_detailed_description() 
+    TO_CONTEXT(A_more_detailed_description)() 
     {
       Parent().its_true = false;
     }
@@ -50,7 +50,7 @@ When(A_scenario_occurs)
 {
   bool some_state;
 
-  A_scenario_occurs() : some_state(true) {}
+  TO_CONTEXT(A_scenario_occurs)() : some_state(true) {}
 
   Then(Should_be_in_a_state)
   {
@@ -59,7 +59,7 @@ When(A_scenario_occurs)
 
   When(A_more_detailed_variant_occurs)
   {
-    A_more_detailed_variant_occurs() 
+    TO_CONTEXT(A_more_detailed_variant_occurs)() 
     {
       Parent().some_state = false;
     }

@@ -9,8 +9,9 @@ namespace igloo { namespace fakes {
       FakeContextRunner(const std::string& contextName, const char* fileName, int lineNumber) 
         : BaseContextRunner(contextName, fileName, lineNumber), is_only_(false), is_skip_(false) {}
 
-      virtual void RunContext(TestResults& results, TestListener&) const
+      virtual void RunContext(TestResults& results, TestListener&, const std::regex& filter = std::regex(".*")) const
       {
+        std::regex unused(filter);
         std::stringstream stm;
         stm << "RunContext called" << std::endl;
         callLog += stm.str();

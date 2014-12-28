@@ -58,5 +58,5 @@ Context(context_with_ignored_specs)
   TestResults testResults;
 };
 
-bool context_with_ignored_specs::ContextToRun::spec_to_run_called_;
-bool context_with_ignored_specs::ContextToRun::spec_to_skip_called_;
+bool TO_CONTEXT(context_with_ignored_specs)::ContextToRun::spec_to_run_called_;
+bool TO_CONTEXT(context_with_ignored_specs)::ContextToRun::spec_to_skip_called_;

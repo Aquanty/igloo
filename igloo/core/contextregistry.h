@@ -68,7 +68,7 @@ namespace igloo {
     }
 
     template <typename ContextToCreate>
-      static void Run(const std::string& contextName, TestResults& results, TestListener& testListener, const std::regex& filter)
+      static void Run(const std::string& contextName, TestResults& results, TestListener& testListener, const std::regex& filter = std::regex(".*"))
       {    
         Specs specs;
         GetSpecsToRun(specs);
